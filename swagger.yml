@@ -185,12 +185,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Entity'
-        description: Entity object that needs to be added to the database
+        description: New data for this entity object
         required: true
       responses:
         "400":
           content: {}
-          description: Identity ID does not match
+          description: ID does not match
         "404":
           content: {}
           description: Entity not found
@@ -401,19 +401,21 @@ paths:
         style: simple
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
-              properties:
-                name:
-                  description: Updated name of the fact
-                  type: string
-                status:
-                  description: Updated status of the fact
-                  type: string
+              $ref: '#/components/schemas/Fact'
+        description: New data for this fact object
+        required: true
       responses:
+        "400":
+          content: {}
+          description: ID does not match
+        "404":
+          content: {}
+          description: Fact not found
         "405":
           content: {}
-          description: Invalid input
+          description: Validation exception
       security:
       - api_key: []
       - boticelli_auth:
@@ -633,19 +635,21 @@ paths:
         style: simple
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
-              properties:
-                name:
-                  description: Updated name of the tag
-                  type: string
-                status:
-                  description: Updated status of the tag
-                  type: string
+              $ref: '#/components/schemas/Tag'
+        description: New data for this tag
+        required: true
       responses:
+        "400":
+          content: {}
+          description: ID does not match
+        "404":
+          content: {}
+          description: Tag not found
         "405":
           content: {}
-          description: Invalid input
+          description: Validation exception
       security:
       - api_key: []
       - boticelli_auth:

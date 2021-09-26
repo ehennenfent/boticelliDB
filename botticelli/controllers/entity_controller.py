@@ -2,7 +2,14 @@ import connexion
 import six
 
 from botticelli import util
-from botticelli.database import Entity, Session, add_item, get_item, delete_item
+from botticelli.database import (
+    Entity,
+    Session,
+    add_item,
+    get_item,
+    delete_item,
+    update_item,
+)
 
 
 def add_entity(body):  # noqa: E501
@@ -88,8 +95,9 @@ def update_entity(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Entity.from_dict(connexion.request.get_json())  # noqa: E501
-    return "do some magic!"
+        as_dict = connexion.request.get_json()
+        entity_id = as_dict.pop("id")
+        return update_item(Entity, entity_id, as_dict)
 
 
 def update_entity_with_form(entity_id, body):  # noqa: E501
@@ -105,5 +113,8 @@ def update_entity_with_form(entity_id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Entity.from_dict(connexion.request.get_json())  # noqa: E501
-    return "do some magic!"
+        as_dict = connexion.request.get_json()
+        _entity_id = as_dict.pop("id", entity_id)
+        if _entity_id != entity_id:
+            return "ID is immutable", 400
+        return update_item(Entity, entity_id, as_dict)

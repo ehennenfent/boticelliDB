@@ -1,7 +1,7 @@
 from connexion.apps.flask_app import FlaskJSONEncoder
 import six
 
-from botticelli.database import Base
+from botticelli.database import Base, Gender
 
 
 class JSONEncoder(FlaskJSONEncoder):
@@ -17,4 +17,6 @@ class JSONEncoder(FlaskJSONEncoder):
                 attr = o.attribute_map[attr]
                 dikt[attr] = value
             return dikt
+        if isinstance(o, Gender):
+            return o.value
         return FlaskJSONEncoder.default(self, o)

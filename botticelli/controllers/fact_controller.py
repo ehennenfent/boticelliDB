@@ -2,7 +2,15 @@ import connexion
 import six
 
 from botticelli import util
-from botticelli.database import Fact, Session, add_item, get_item, delete_item
+from botticelli.database import (
+    Fact,
+    Entity,
+    Session,
+    add_item,
+    get_item,
+    delete_item,
+    update_item,
+)
 
 
 def add_fact(entity_id, body):  # noqa: E501
@@ -18,7 +26,13 @@ def add_fact(entity_id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        return [add_item(Fact, connexion.request.get_json())]
+        session = Session()
+        maybe_entity = session.query(Entity).get(entity_id)
+        if maybe_entity is not None:
+            args = connexion.request.get_json()
+            args["entity"] = maybe_entity
+            return [add_item(Fact, args, session=session)]
+        return f"No such Entity: {entity_id}", 404
 
 
 def delete_fact(fact_id, entity_id):  # noqa: E501
@@ -46,7 +60,10 @@ def get_entity_facts(entity_id):  # noqa: E501
 
     :rtype: List[Entity]
     """
-    return "do some magic!"
+    maybe_entity = Session().query(Entity).get(entity_id)
+    if maybe_entity is not None:
+        return list(f.to_dict() for f in maybe_entity.facts)
+    return f"No such Entity: {entity_id}", 404
 
 
 def get_fact_by_id(fact_id, entity_id):  # noqa: E501
@@ -77,11 +94,12 @@ def update_fact(entity_id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Fact.from_dict(connexion.request.get_json())  # noqa: E501
-    return "do some magic!"
+        as_dict = connexion.request.get_json()
+        fact_id = as_dict.pop("id")
+        return update_item(Fact, fact_id, as_dict)
 
 
-def update_fact_with_form(fact_id, entity_id, name=None, status=None):  # noqa: E501
+def update_fact_with_form(fact_id, entity_id):  # noqa: E501
     """Updates a fact in the database with form data
 
      # noqa: E501
@@ -97,4 +115,14 @@ def update_fact_with_form(fact_id, entity_id, name=None, status=None):  # noqa: 
 
     :rtype: None
     """
-    return "do some magic!"
+    if connexion.request.is_json:
+        as_dict = connexion.request.get_json()
+        _entity_id = as_dict.pop("entity_id", entity_id)
+        _fact_id = as_dict.pop("id", fact_id)
+
+        if _fact_id != fact_id:
+            return "ID is immutable", 400
+        if _entity_id != entity_id:
+            return "Entity ID is immutable", 400
+
+        return update_item(Fact, fact_id, as_dict)

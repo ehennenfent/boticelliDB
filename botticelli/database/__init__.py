@@ -17,10 +17,12 @@ Session = sessionmaker(bind=engine)
 # init_yaml(_spec_file, base=Base, models_filename=_models_file)
 
 from botticelli.database.models import *
+
 Base.metadata.create_all(engine)
 
-def add_item(cls: Base, init_params) -> int:
-    session = Session()
+
+def add_item(cls: Base, init_params, *, session=Session()) -> int:
+    init_params.pop("id", None)
     created = cls.from_dict(init_params)
     session.add(created)
     session.flush()
@@ -28,16 +30,28 @@ def add_item(cls: Base, init_params) -> int:
     session.commit()
     return cached_id
 
-def get_item(cls, item_id: int):
-    maybe_item = Session().query(cls).get(item_id)
+
+def get_item(cls, item_id: int, *, session=Session()):
+    maybe_item = session.query(cls).get(item_id)
     if maybe_item is not None:
         return maybe_item.to_dict()
     return f"No such {cls.__name__}: {item_id}", 404
 
-def delete_item(cls, item_id: int):
-    session = Session()
+
+def delete_item(cls, item_id: int, *, session=Session()):
     maybe_item = session.query(cls).get(item_id)
     if maybe_item is not None:
         session.delete(maybe_item)
         session.commit()
+        return [item_id]
+    return f"No such {cls.__name__}: {item_id}", 404
+
+
+def update_item(cls, item_id: int, new_data, *, session=Session()):
+    maybe_item = session.query(cls).get(item_id)
+    if maybe_item is not None:
+        for (k, v) in new_data.items():
+            setattr(maybe_item, k, v)
+        session.commit()
+        return [item_id]
     return f"No such {cls.__name__}: {item_id}", 404

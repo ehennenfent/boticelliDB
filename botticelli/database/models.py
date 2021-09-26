@@ -9,34 +9,39 @@ from sqlalchemy_mixins import TimestampsMixin
 
 from . import Base
 
+
 class JSONSerializableMixin:
     #: Map hybrid property names to their underlying columns
     remappings = {}
 
     @classmethod
     def from_dict(cls, init_dict):
-        remapped = {
-            cls.remappings.get(k, k):v for (k, v) in init_dict.items()
-        }
+        remapped = {cls.remappings.get(k, k): v for (k, v) in init_dict.items()}
         return cls(**remapped)
 
     def to_dict(self):
-        inverted_remappings = {v:k for (k, v) in self.remappings.items()}
+        inverted_remappings = {v: k for (k, v) in self.remappings.items()}
         return {
-            inverted_remappings.get(c.name, c.name): getattr(self, inverted_remappings.get(c.name, c.name))
+            inverted_remappings.get(c.name, c.name): getattr(
+                self, inverted_remappings.get(c.name, c.name)
+            )
             for c in self.__table__.columns
         }
 
-    
-class Gender(enum.Enum):
-    male = 0
-    female = 1
-    analog = 2
 
-tag_table = Table('entity_tags', Base.metadata,
-    Column('entity_id', ForeignKey('entities.id')),
-    Column('tag_id', ForeignKey('tags.id'))
+class Gender(enum.Enum):
+    male = "male"
+    female = "female"
+    analog = "analog"
+
+
+tag_table = Table(
+    "entity_tags",
+    Base.metadata,
+    Column("entity_id", ForeignKey("entities.id")),
+    Column("tag_id", ForeignKey("tags.id")),
 )
+
 
 class Fact(JSONSerializableMixin, TimestampsMixin, Base):
     __tablename__ = "facts"
@@ -44,7 +49,8 @@ class Fact(JSONSerializableMixin, TimestampsMixin, Base):
     id = Column(Integer, primary_key=True)
     text = Column(String)
     entity = relationship("Entity", back_populates="facts")
-    entity_id = Column(Integer, ForeignKey('entities.id'))
+    entity_id = Column(Integer, ForeignKey("entities.id"))
+
 
 class Tag(JSONSerializableMixin, TimestampsMixin, Base):
     __tablename__ = "tags"
@@ -52,6 +58,7 @@ class Tag(JSONSerializableMixin, TimestampsMixin, Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
     tagged = relationship("Entity", secondary=tag_table, back_populates="tags")
+
 
 class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     __tablename__ = "entities"
@@ -82,6 +89,12 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     @alphabetized_as.setter
     def alphabetized_as(self, new_val: str):
         self._alphabetized_as = new_val[0]
+
+    def to_dict(self):
+        base = super().to_dict()
+        base["facts"] = list(f.to_dict() for f in self.facts)
+        base["tags"] = list(t.to_dict() for t in self.tags)
+        return base
 
 
 class User(JSONSerializableMixin, TimestampsMixin, Base):

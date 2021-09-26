@@ -2,7 +2,14 @@ import connexion
 import six
 
 from botticelli import util
-from botticelli.database import Tag, Session, add_item, get_item, delete_item
+from botticelli.database import (
+    Tag,
+    Session,
+    add_item,
+    get_item,
+    delete_item,
+    update_item,
+)
 
 
 def add_tag(body):  # noqa: E501
@@ -101,11 +108,12 @@ def update_tag(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Tag.from_dict(connexion.request.get_json())  # noqa: E501
-    return "do some magic!"
+        as_dict = connexion.request.get_json()
+        tag_id = as_dict.pop("id")
+        return update_item(Tag, tag_id, as_dict)
 
 
-def update_tag_with_form(tag_id, name=None, status=None):  # noqa: E501
+def update_tag_with_form(tag_id):  # noqa: E501
     """Updates a tag in the database with form data
 
      # noqa: E501
@@ -119,4 +127,9 @@ def update_tag_with_form(tag_id, name=None, status=None):  # noqa: E501
 
     :rtype: None
     """
-    return "do some magic!"
+    if connexion.request.is_json:
+        as_dict = connexion.request.get_json()
+        _tag_id = as_dict.pop("id", tag_id)
+        if _tag_id != tag_id:
+            return "ID is immutable", 400
+        return update_item(Tag, tag_id, as_dict)

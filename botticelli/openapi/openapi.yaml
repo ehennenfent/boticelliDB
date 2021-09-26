@@ -1,0 +1,956 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: ecapstone@gmail.com
+  description: A database of people/creatures/characters for the game Boticelli.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Botticelli DB
+  version: 1.0.0
+servers:
+- url: https://botticel.li/v1
+- url: http://botticel.li/v1
+tags:
+- description: Involves a person or fictional character
+  name: entity
+- description: Keep track of who's doing what
+  name: user
+- description: Tracks properties of entities
+  name: tag
+- description: Information about entities
+  name: fact
+paths:
+  /entity:
+    get:
+      operationId: get_all_entities
+      parameters:
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Only return entities with changes past this date
+        explode: true
+        in: query
+        name: updated_since
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Only return entities created after this date
+        explode: true
+        in: query
+        name: created_since
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Entity'
+                type: array
+          description: A list of entities.
+      summary: Returns all entities from the system
+      tags:
+      - entity
+      x-openapi-router-controller: botticelli.controllers.entity_controller
+    post:
+      operationId: add_entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entity'
+        description: Entity object that needs to be added to the database
+        required: true
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Add a new entity to the database
+      tags:
+      - entity
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.entity_controller
+    put:
+      operationId: update_entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entity'
+        description: Entity object that needs to be added to the database
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Entity not found
+        "405":
+          content: {}
+          description: Validation exception
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Update an existing entity
+      tags:
+      - entity
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.entity_controller
+  /entity/{entity_id}:
+    delete:
+      operationId: delete_entity
+      parameters:
+      - description: Entity id to delete
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Entity not found
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Deletes a entity
+      tags:
+      - entity
+      x-openapi-router-controller: botticelli.controllers.entity_controller
+    get:
+      description: Returns a single entity
+      operationId: get_entity_by_id
+      parameters:
+      - description: ID of entity to return
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Entity not found
+      summary: Find entity by ID
+      tags:
+      - entity
+      x-openapi-router-controller: botticelli.controllers.entity_controller
+    post:
+      operationId: update_entity_with_form
+      parameters:
+      - description: ID of this entity
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entity'
+        description: Entity object that needs to be added to the database
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Identity ID does not match
+        "404":
+          content: {}
+          description: Entity not found
+        "405":
+          content: {}
+          description: Validation exception
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Update this entity
+      tags:
+      - entity
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.entity_controller
+  /entity/{entity_id}/fact:
+    get:
+      operationId: get_entity_facts
+      parameters:
+      - description: ID of entity to get facts for
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Entity'
+                type: array
+          description: A list of entities.
+      summary: Returns all entities from the system
+      tags:
+      - fact
+      x-openapi-router-controller: botticelli.controllers.fact_controller
+    post:
+      operationId: add_fact
+      parameters:
+      - description: ID of entity to get facts for
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fact'
+        description: Fact object that needs to be added to the database
+        required: true
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Add a new fact to the database
+      tags:
+      - fact
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.fact_controller
+    put:
+      operationId: update_fact
+      parameters:
+      - description: ID of entity to get facts for
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fact'
+        description: Fact object that needs to be added to the database
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Fact not found
+        "405":
+          content: {}
+          description: Validation exception
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Update an existing fact
+      tags:
+      - fact
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.fact_controller
+  /entity/{entity_id}/fact/{fact_id}:
+    delete:
+      operationId: delete_fact
+      parameters:
+      - description: Fact id to delete
+        explode: false
+        in: path
+        name: fact_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of entity this fact belongs to
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Fact not found
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Deletes a fact
+      tags:
+      - fact
+      x-openapi-router-controller: botticelli.controllers.fact_controller
+    get:
+      description: Returns a single fact
+      operationId: get_fact_by_id
+      parameters:
+      - description: ID of fact to return
+        explode: false
+        in: path
+        name: fact_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of entity this fact belongs to
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fact'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Fact not found
+      summary: Find fact by ID
+      tags:
+      - fact
+      x-openapi-router-controller: botticelli.controllers.fact_controller
+    post:
+      operationId: update_fact_with_form
+      parameters:
+      - description: ID of fact that needs to be updated
+        explode: false
+        in: path
+        name: fact_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of entity this fact belongs to
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                name:
+                  description: Updated name of the fact
+                  type: string
+                status:
+                  description: Updated status of the fact
+                  type: string
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Updates a fact in the database with form data
+      tags:
+      - fact
+      x-openapi-router-controller: botticelli.controllers.fact_controller
+  /entity/{entity_id}/tag/{tag_id}:
+    delete:
+      operationId: untag_entity
+      parameters:
+      - description: ID of entity to remove tag from
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of tag to remove from this entity
+        explode: false
+        in: path
+        name: tag_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Tag or Entity not found
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Remove a tag from an entity
+      tags:
+      - tag
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+    post:
+      operationId: tag_entity
+      parameters:
+      - description: ID of entity to add tag to
+        explode: false
+        in: path
+        name: entity_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of tag to add to this entity
+        explode: false
+        in: path
+        name: tag_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Assign a tag to an entity
+      tags:
+      - tag
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+  /tag:
+    get:
+      operationId: get_all_tags
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Tag'
+                type: array
+          description: A list of tags.
+      summary: Returns all tags
+      tags:
+      - tag
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+    post:
+      operationId: add_tag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        description: Tag object that needs to be added to the database
+        required: true
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Add a new tag to the database
+      tags:
+      - tag
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+    put:
+      operationId: update_tag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        description: Tag object that needs to be added to the database
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Tag not found
+        "405":
+          content: {}
+          description: Validation exception
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Update an existing tag
+      tags:
+      - tag
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+  /tag/{tag_id}:
+    delete:
+      operationId: delete_tag
+      parameters:
+      - description: Tag id to delete
+        explode: false
+        in: path
+        name: tag_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Tag not found
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Deletes a tag
+      tags:
+      - tag
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+    get:
+      description: Returns a single tag
+      operationId: get_tag_by_id
+      parameters:
+      - description: ID of tag to return
+        explode: false
+        in: path
+        name: tag_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Tag not found
+      security:
+      - api_key: []
+      summary: Find tag by ID
+      tags:
+      - tag
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+    post:
+      operationId: update_tag_with_form
+      parameters:
+      - description: ID of tag that needs to be updated
+        explode: false
+        in: path
+        name: tag_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                name:
+                  description: Updated name of the tag
+                  type: string
+                status:
+                  description: Updated status of the tag
+                  type: string
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - api_key: []
+      - boticelli_auth:
+        - write:entries
+      summary: Updates a tag in the database with form data
+      tags:
+      - tag
+      x-openapi-router-controller: botticelli.controllers.tag_controller
+  /user/login:
+    post:
+      operationId: login_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: User Data for log in
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              explode: false
+              schema:
+                format: int32
+                type: integer
+              style: simple
+            X-Expires-After:
+              description: date in UTC when token expires
+              explode: false
+              schema:
+                format: date-time
+                type: string
+              style: simple
+        "400":
+          content: {}
+          description: Invalid username/password supplied
+      summary: Logs user into the system
+      tags:
+      - user
+      x-openapi-router-controller: botticelli.controllers.user_controller
+  /user/logout:
+    get:
+      operationId: logout_user
+      responses:
+        default:
+          content: {}
+          description: successful operation
+      summary: Logs out current logged in user session
+      tags:
+      - user
+      x-openapi-router-controller: botticelli.controllers.user_controller
+  /user/{username}:
+    get:
+      operationId: get_user_by_name
+      parameters:
+      - description: 'The name that needs to be fetched. Use user1 for testing. '
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid username supplied
+        "404":
+          content: {}
+          description: User not found
+      summary: Get user by user name
+      tags:
+      - user
+      x-openapi-router-controller: botticelli.controllers.user_controller
+components:
+  schemas:
+    Fact:
+      example:
+        id: 1
+        text: text
+        entity_id: 5
+      properties:
+        id:
+          format: int64
+          readOnly: true
+          title: id
+          type: integer
+          x-primary-key: true
+          x-nullable: false
+          x-autoincrement: true
+        updated_at:
+          format: date-time
+          readOnly: true
+          type: string
+        created_at:
+          format: date-time
+          readOnly: true
+          type: string
+        text:
+          title: text
+          type: string
+      required:
+      - text
+      title: Fact
+      type: object
+      x-tablename: facts
+      x-mixins: sqlalchemy_mixins.TimestampsMixin
+    User:
+      example:
+        password: password
+        username: username
+      properties:
+        id:
+          format: int64
+          readOnly: true
+          title: id
+          type: integer
+          x-primary-key: true
+          x-nullable: false
+          x-autoincrement: true
+        updated_at:
+          format: date-time
+          readOnly: true
+          type: string
+        created_at:
+          format: date-time
+          readOnly: true
+          type: string
+        username:
+          title: username
+          type: string
+        password:
+          title: password
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+      title: User
+      type: object
+      x-tablename: users
+      x-mixins: sqlalchemy_mixins.TimestampsMixin
+    Tag:
+      example:
+        name: name
+        id: 0
+      properties:
+        id:
+          format: int64
+          readOnly: true
+          title: id
+          type: integer
+          x-primary-key: true
+          x-nullable: false
+          x-autoincrement: true
+        updated_at:
+          format: date-time
+          readOnly: true
+          type: string
+        created_at:
+          format: date-time
+          readOnly: true
+          type: string
+        name:
+          title: name
+          type: string
+      required:
+      - name
+      title: Tag
+      type: object
+      x-tablename: tags
+      x-mixins: sqlalchemy_mixins.TimestampsMixin
+    Entity:
+      example:
+        is_real: true
+        alphabetized_as: O
+        is_living: true
+        gender: male
+        given_name: Shaquille
+        description: American former basketball player and sports analyst on TNT
+        facts: []
+        tags: []
+        score: 6
+        birth_year: "1972"
+        surname: O'Neal
+        nickname: Shaq
+        id: 0
+      properties:
+        id:
+          format: int64
+          readOnly: true
+          title: id
+          type: integer
+          x-primary-key: true
+          x-nullable: false
+          x-autoincrement: true
+        updated_at:
+          format: date-time
+          readOnly: true
+          type: string
+        created_at:
+          format: date-time
+          readOnly: true
+          type: string
+        given_name:
+          example: Shaquille
+          title: given_name
+          type: string
+        nickname:
+          example: Shaq
+          title: nickname
+          type: string
+        surname:
+          example: O'Neal
+          title: surname
+          type: string
+        alphabetized_as:
+          example: O
+          title: alphabetized_as
+          type: string
+        is_real:
+          example: true
+          title: is_real
+          type: boolean
+        is_living:
+          example: true
+          title: is_living
+          type: boolean
+        birth_year:
+          example: "1972"
+          title: birth_year
+          type: string
+        gender:
+          enum:
+          - male
+          - female
+          - analog
+          example: male
+          title: gender
+          type: string
+        score:
+          format: int64
+          title: score
+          type: integer
+        description:
+          example: American former basketball player and sports analyst on TNT
+          title: description
+          type: string
+        tags:
+          items:
+            allOf:
+            - $ref: '#/components/schemas/Tag'
+            - x-secondary: entity_tags
+            - x-backref: tagged
+          title: tags
+          type: array
+        facts:
+          items:
+            allOf:
+            - $ref: '#/components/schemas/Fact'
+            - x-backref: entity
+          title: facts
+          type: array
+      title: Entity
+      type: object
+      x-tablename: entities
+      x-mixins: sqlalchemy_mixins.TimestampsMixin
+  securitySchemes:
+    boticelli_auth:
+      flows:
+        implicit:
+          authorizationUrl: http://boticel.li/oauth/dialog
+          scopes:
+            write:entries: Modify entities, facts, and tags
+      type: oauth2
+      x-tokenInfoFunc: botticelli.controllers.security_controller_.info_from_boticelli_auth
+      x-scopeValidateFunc: botticelli.controllers.security_controller_.validate_scope_boticelli_auth
+    api_key:
+      in: header
+      name: api_key
+      type: apiKey
+      x-apikeyInfoFunc: botticelli.controllers.security_controller_.info_from_api_key

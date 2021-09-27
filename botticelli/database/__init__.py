@@ -20,6 +20,8 @@ from botticelli.database.models import *
 
 Base.metadata.create_all(engine)
 
+from botticelli.database.default_items import *
+
 
 def add_item(cls: Base, init_params, *, session=Session()) -> int:
     init_params.pop("id", None)
@@ -51,7 +53,12 @@ def update_item(cls, item_id: int, new_data, *, session=Session()):
     maybe_item = session.query(cls).get(item_id)
     if maybe_item is not None:
         for (k, v) in new_data.items():
-            setattr(maybe_item, k, v)
+            if isinstance(v, list):
+                getattr(maybe_item, k).clear()
+                for item in v:
+                    getattr(maybe_item, k).append(item)
+            else:
+                setattr(maybe_item, k, v)
         session.commit()
         return [item_id]
     return f"No such {cls.__name__}: {item_id}", 404

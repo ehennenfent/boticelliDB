@@ -705,6 +705,8 @@ paths:
           content: {}
           description: successful operation
       summary: Logs out current logged in user session
+      security:
+      - api_key: []
       tags:
       - user
       x-openapi-router-controller: botticelli.controllers.user_controller
@@ -741,9 +743,7 @@ components:
   schemas:
     Fact:
       example:
-        id: 1
         text: text
-        entity_id: 5
       properties:
         id:
           format: int64
@@ -808,7 +808,6 @@ components:
     Tag:
       example:
         name: name
-        id: 0
       properties:
         id:
           format: int64
@@ -849,7 +848,6 @@ components:
         birth_year: "1972"
         surname: O'Neal
         nickname: Shaq
-        id: 0
       properties:
         id:
           format: int64

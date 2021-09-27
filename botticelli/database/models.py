@@ -9,6 +9,8 @@ from sqlalchemy_mixins import TimestampsMixin
 
 from . import Base
 
+from bcrypt import checkpw as bcrypt_check
+
 
 class JSONSerializableMixin:
     #: Map hybrid property names to their underlying columns
@@ -59,6 +61,12 @@ class Tag(JSONSerializableMixin, TimestampsMixin, Base):
     name = Column(String, unique=True)
     tagged = relationship("Entity", secondary=tag_table, back_populates="tags")
 
+    def to_dict(self, include_tagged=False):
+        base = super().to_dict()
+        if include_tagged:
+            base["tagged"] = list(e.id for e in self.tagged)
+        return base
+
 
 class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     __tablename__ = "entities"
@@ -72,7 +80,7 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     _alphabetized_as = Column(String)
     is_real = Column(Boolean)
     is_living = Column(Boolean)
-    birth_year = Column(Boolean)
+    birth_year = Column(String)
     gender = Column(Enum(Gender))
     score = Column(Integer, default=0)
     description = Column(String)
@@ -103,3 +111,11 @@ class User(JSONSerializableMixin, TimestampsMixin, Base):
     id = Column(Integer, primary_key=True)
     username = Column(String)
     password = Column(String)
+
+    def check_password(self, password: str):
+        return bcrypt_check(password.encode("utf-8"), self.password.encode("utf-8"))
+
+    def to_dict(self):
+        base = super().to_dict()
+        base.pop("password")
+        return base

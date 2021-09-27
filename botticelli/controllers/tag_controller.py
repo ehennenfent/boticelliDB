@@ -3,6 +3,7 @@ import six
 
 from botticelli import util
 from botticelli.database import (
+    Entity,
     Tag,
     Session,
     add_item,
@@ -62,7 +63,11 @@ def get_tag_by_id(tag_id):  # noqa: E501
 
     :rtype: Tag
     """
-    return get_item(Tag, tag_id)
+    session = Session()
+    maybe_item = session.query(Tag).get(tag_id)
+    if maybe_item is not None:
+        return maybe_item.to_dict(include_tagged=True)
+    return f"No such Tag: {tag_id}", 404
 
 
 def tag_entity(entity_id, tag_id):  # noqa: E501
@@ -77,7 +82,16 @@ def tag_entity(entity_id, tag_id):  # noqa: E501
 
     :rtype: None
     """
-    return "do some magic!"
+    session = Session()
+    tag = session.query(Tag).get(tag_id)
+    if tag is None:
+        return "No such Tag", 404
+    entity = session.query(Entity).get(entity_id)
+    if entity is None:
+        return "No such Entity", 404
+    entity.tags.append(tag)
+    session.commit()
+    return tag_id
 
 
 def untag_entity(entity_id, tag_id):  # noqa: E501
@@ -94,7 +108,19 @@ def untag_entity(entity_id, tag_id):  # noqa: E501
 
     :rtype: None
     """
-    return "do some magic!"
+    session = Session()
+    tag = session.query(Tag).get(tag_id)
+    if tag is None:
+        return "No such Tag", 404
+    entity = session.query(Entity).get(entity_id)
+    if entity is None:
+        return "No such Entity", 404
+    try:
+        entity.tags.remove(tag)
+    except ValueError:
+        return "Entity does not have this tag", 400
+    session.commit()
+    return tag_id
 
 
 def update_tag(body):  # noqa: E501

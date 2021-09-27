@@ -1,4 +1,9 @@
 from typing import List
+from botticelli.database.sessions import active_sessions
+
+defined_oauth_tokens = {
+    # "FakeOauthToken": {"scopes": ["write:entries"], "uid": "user_id"}
+}
 
 
 def info_from_api_key(api_key, required_scopes):
@@ -14,7 +19,7 @@ def info_from_api_key(api_key, required_scopes):
     :return: Information attached to provided api_key or None if api_key is invalid or does not allow access to called API
     :rtype: dict | None
     """
-    return {"uid": "user_id"}
+    return active_sessions.get(api_key, None)
 
 
 def info_from_boticelli_auth(token):
@@ -29,7 +34,7 @@ def info_from_boticelli_auth(token):
     :return: Decoded token information or None if token is invalid
     :rtype: dict | None
     """
-    return {"scopes": ["read:pets", "write:pets"], "uid": "user_id"}
+    return defined_oauth_tokens.get(token, None)
 
 
 def validate_scope_boticelli_auth(required_scopes, token_scopes):

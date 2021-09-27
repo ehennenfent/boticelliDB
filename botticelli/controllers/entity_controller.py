@@ -4,12 +4,36 @@ import six
 from botticelli import util
 from botticelli.database import (
     Entity,
+    Fact,
+    Tag,
     Session,
     add_item,
     get_item,
     delete_item,
     update_item,
 )
+
+
+def convert_facts_and_tags(as_dict, session):
+    new_facts = []
+    new_tags = []
+    for fact in as_dict.pop("facts", ()):
+        maybe_fact = session.query(Fact).filter(Fact.text == fact["text"]).first()
+        if maybe_fact is None:
+            new_facts.append(Fact(**fact))
+        else:
+            new_facts.append(maybe_fact)
+    as_dict["facts"] = new_facts
+    for tag in as_dict.pop("tags", ()):
+        maybe_tag = session.query(Tag).filter(Tag.name == tag["name"]).first()
+        if maybe_tag is None:
+            new_tag = Tag(**tag)
+            new_tags.append(new_tag)
+            session.add(new_tag)
+        else:
+            new_tags.append(maybe_tag)
+    as_dict["tags"] = new_tags
+    return as_dict
 
 
 def add_entity(body):  # noqa: E501
@@ -23,7 +47,9 @@ def add_entity(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        return [add_item(Entity, connexion.request.get_json())]
+        session = Session()
+        as_dict = convert_facts_and_tags(connexion.request.get_json(), session)
+        return [add_item(Entity, as_dict, session=session)]
 
 
 def delete_entity(entity_id):  # noqa: E501
@@ -95,9 +121,10 @@ def update_entity(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        as_dict = connexion.request.get_json()
+        session = Session()
+        as_dict = convert_facts_and_tags(connexion.request.get_json(), session)
         entity_id = as_dict.pop("id")
-        return update_item(Entity, entity_id, as_dict)
+        return update_item(Entity, entity_id, as_dict, session=session)
 
 
 def update_entity_with_form(entity_id, body):  # noqa: E501
@@ -113,8 +140,9 @@ def update_entity_with_form(entity_id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        as_dict = connexion.request.get_json()
+        session = Session()
+        as_dict = convert_facts_and_tags(connexion.request.get_json(), session)
         _entity_id = as_dict.pop("id", entity_id)
         if _entity_id != entity_id:
             return "ID is immutable", 400
-        return update_item(Entity, entity_id, as_dict)
+        return update_item(Entity, entity_id, as_dict, session=session)

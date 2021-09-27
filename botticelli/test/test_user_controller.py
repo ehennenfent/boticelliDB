@@ -53,27 +53,6 @@ class TestUserController(BaseTestCase):
         response = self.client.open("/v1/user/logout", method="GET", headers=headers)
         self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
-    @unittest.skip(
-        "*/* not supported by Connexion. Use application/json instead. See https://github.com/zalando/connexion/pull/760"
-    )
-    def test_update_user(self):
-        """Test case for update_user
-
-        Updated user
-        """
-        body = None
-        headers = {
-            "Content-Type": "application/json",
-        }
-        response = self.client.open(
-            "/v1/user/{username}".format(username="username_example"),
-            method="PUT",
-            headers=headers,
-            data=json.dumps(body),
-            content_type="application/json",
-        )
-        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
-
 
 if __name__ == "__main__":
     unittest.main()

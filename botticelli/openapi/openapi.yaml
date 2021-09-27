@@ -198,12 +198,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Entity'
-        description: Entity object that needs to be added to the database
+        description: New data for this entity object
         required: true
       responses:
         "400":
           content: {}
-          description: Identity ID does not match
+          description: ID does not match
         "404":
           content: {}
           description: Entity not found
@@ -414,19 +414,21 @@ paths:
         style: simple
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
-              properties:
-                name:
-                  description: Updated name of the fact
-                  type: string
-                status:
-                  description: Updated status of the fact
-                  type: string
+              $ref: '#/components/schemas/Fact'
+        description: New data for this fact object
+        required: true
       responses:
+        "400":
+          content: {}
+          description: ID does not match
+        "404":
+          content: {}
+          description: Fact not found
         "405":
           content: {}
-          description: Invalid input
+          description: Validation exception
       security:
       - api_key: []
       - boticelli_auth:
@@ -646,19 +648,21 @@ paths:
         style: simple
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
-              properties:
-                name:
-                  description: Updated name of the tag
-                  type: string
-                status:
-                  description: Updated status of the tag
-                  type: string
+              $ref: '#/components/schemas/Tag'
+        description: New data for this tag
+        required: true
       responses:
+        "400":
+          content: {}
+          description: ID does not match
+        "404":
+          content: {}
+          description: Tag not found
         "405":
           content: {}
-          description: Invalid input
+          description: Validation exception
       security:
       - api_key: []
       - boticelli_auth:
@@ -714,6 +718,8 @@ paths:
           content: {}
           description: successful operation
       summary: Logs out current logged in user session
+      security:
+      - api_key: []
       tags:
       - user
       x-openapi-router-controller: botticelli.controllers.user_controller
@@ -750,9 +756,7 @@ components:
   schemas:
     Fact:
       example:
-        id: 1
         text: text
-        entity_id: 5
       properties:
         id:
           format: int64
@@ -817,7 +821,6 @@ components:
     Tag:
       example:
         name: name
-        id: 0
       properties:
         id:
           format: int64
@@ -858,7 +861,6 @@ components:
         birth_year: "1972"
         surname: O'Neal
         nickname: Shaq
-        id: 0
       properties:
         id:
           format: int64

@@ -92,27 +92,6 @@ class TestTagController(BaseTestCase):
         )
         self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 
-    @unittest.skip("application/x-www-form-urlencoded not supported by Connexion")
-    def test_update_tag_with_form(self):
-        """Test case for update_tag_with_form
-
-        Updates a tag in the database with form data
-        """
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "api_key": "special-key",
-            "Authorization": "Bearer special-key",
-        }
-        data = dict(name="name_example", status="status_example")
-        response = self.client.open(
-            "/v1/tag/{tag_id}".format(tag_id=56),
-            method="POST",
-            headers=headers,
-            data=data,
-            content_type="application/x-www-form-urlencoded",
-        )
-        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
-
 
 if __name__ == "__main__":
     unittest.main()

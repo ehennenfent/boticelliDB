@@ -128,32 +128,13 @@ def get_entity_by_id(entity_id):  # noqa: E501
     return get_item(Entity, entity_id)
 
 
-def update_entity(body):  # noqa: E501
-    """Update an existing entity
-
-     # noqa: E501
-
-    :param body: Entity object that needs to be added to the database
-    :type body: dict | bytes
-
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        session = Session()
-        as_dict = convert_facts_and_tags(connexion.request.get_json(), session)
-        entity_id = as_dict.pop("id")
-        return update_item(Entity, entity_id, as_dict, session=session)
-
-
-def update_entity_with_form(entity_id, body):  # noqa: E501
+def update_entity(entity_id):  # noqa: E501
     """Update this entity
 
      # noqa: E501
 
     :param entity_id: ID of this entity
     :type entity_id: int
-    :param body: Entity object that needs to be added to the database
-    :type body: dict | bytes
 
     :rtype: None
     """

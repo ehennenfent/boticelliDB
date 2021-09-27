@@ -82,34 +82,6 @@ paths:
       - entity
       x-codegen-request-body-name: body
       x-openapi-router-controller: botticelli.controllers.entity_controller
-    put:
-      operationId: update_entity
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Entity'
-        description: Entity object that needs to be added to the database
-        required: true
-      responses:
-        "400":
-          content: {}
-          description: Invalid ID supplied
-        "404":
-          content: {}
-          description: Entity not found
-        "405":
-          content: {}
-          description: Validation exception
-      security:
-      - api_key: []
-      - boticelli_auth:
-        - write:entries
-      summary: Update an existing entity
-      tags:
-      - entity
-      x-codegen-request-body-name: body
-      x-openapi-router-controller: botticelli.controllers.entity_controller
   /entity/search:
     get:
       operationId: search_for_entities
@@ -201,7 +173,7 @@ paths:
       - entity
       x-openapi-router-controller: botticelli.controllers.entity_controller
     post:
-      operationId: update_entity_with_form
+      operationId: update_entity
       parameters:
       - description: ID of this entity
         explode: false
@@ -296,44 +268,6 @@ paths:
       - fact
       x-codegen-request-body-name: body
       x-openapi-router-controller: botticelli.controllers.fact_controller
-    put:
-      operationId: update_fact
-      parameters:
-        - description: ID of entity to get facts for
-          explode: false
-          in: path
-          name: entity_id
-          required: true
-          schema:
-            format: int64
-            type: integer
-          style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Fact'
-        description: Fact object that needs to be added to the database
-        required: true
-      responses:
-        "400":
-          content: {}
-          description: Invalid ID supplied
-        "404":
-          content: {}
-          description: Fact not found
-        "405":
-          content: {}
-          description: Validation exception
-      security:
-      - api_key: []
-      - boticelli_auth:
-        - write:entries
-      summary: Update an existing fact
-      tags:
-      - fact
-      x-codegen-request-body-name: body
-      x-openapi-router-controller: botticelli.controllers.fact_controller
   /entity/{entity_id}/fact/{fact_id}:
     delete:
       operationId: delete_fact
@@ -411,7 +345,7 @@ paths:
       - fact
       x-openapi-router-controller: botticelli.controllers.fact_controller
     post:
-      operationId: update_fact_with_form
+      operationId: update_fact
       parameters:
       - description: ID of fact that needs to be updated
         explode: false
@@ -565,34 +499,6 @@ paths:
       - tag
       x-codegen-request-body-name: body
       x-openapi-router-controller: botticelli.controllers.tag_controller
-    put:
-      operationId: update_tag
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tag'
-        description: Tag object that needs to be added to the database
-        required: true
-      responses:
-        "400":
-          content: {}
-          description: Invalid ID supplied
-        "404":
-          content: {}
-          description: Tag not found
-        "405":
-          content: {}
-          description: Validation exception
-      security:
-      - api_key: []
-      - boticelli_auth:
-        - write:entries
-      summary: Update an existing tag
-      tags:
-      - tag
-      x-codegen-request-body-name: body
-      x-openapi-router-controller: botticelli.controllers.tag_controller
   /tag/{tag_id}:
     delete:
       operationId: delete_tag
@@ -654,7 +560,7 @@ paths:
       - tag
       x-openapi-router-controller: botticelli.controllers.tag_controller
     post:
-      operationId: update_tag_with_form
+      operationId: update_tag
       parameters:
       - description: ID of tag that needs to be updated
         explode: false

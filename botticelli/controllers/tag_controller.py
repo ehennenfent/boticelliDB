@@ -123,23 +123,7 @@ def untag_entity(entity_id, tag_id):  # noqa: E501
     return tag_id
 
 
-def update_tag(body):  # noqa: E501
-    """Update an existing tag
-
-     # noqa: E501
-
-    :param body: Tag object that needs to be added to the database
-    :type body: dict | bytes
-
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        as_dict = connexion.request.get_json()
-        tag_id = as_dict.pop("id")
-        return update_item(Tag, tag_id, as_dict)
-
-
-def update_tag_with_form(tag_id):  # noqa: E501
+def update_tag(tag_id):  # noqa: E501
     """Updates a tag in the database with form data
 
      # noqa: E501

@@ -81,25 +81,7 @@ def get_fact_by_id(fact_id, entity_id):  # noqa: E501
     return get_item(Fact, fact_id)
 
 
-def update_fact(entity_id, body):  # noqa: E501
-    """Update an existing fact
-
-     # noqa: E501
-
-    :param entity_id: ID of entity to get facts for
-    :type entity_id: int
-    :param body: Fact object that needs to be added to the database
-    :type body: dict | bytes
-
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        as_dict = connexion.request.get_json()
-        fact_id = as_dict.pop("id")
-        return update_item(Fact, fact_id, as_dict)
-
-
-def update_fact_with_form(fact_id, entity_id):  # noqa: E501
+def update_fact(fact_id, entity_id):  # noqa: E501
     """Updates a fact in the database with form data
 
      # noqa: E501

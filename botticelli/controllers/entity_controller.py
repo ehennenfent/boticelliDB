@@ -97,6 +97,24 @@ def get_all_entities(
     return list(e.to_dict() for e in query.all())
 
 
+def search_for_entities(q="", limit=25, offset=None):  # noqa: E501
+    fmt = f"%{q}%"
+    query = (
+        Session()
+        .query(Entity)
+        .order_by(Entity.score.desc())
+        .filter(
+            Entity.given_name.like(fmt)
+            | Entity.nickname.like(fmt)
+            | Entity.surname.like(fmt)
+        )
+    )
+    if offset is not None:
+        query = query.offset(offset)
+    query = query.limit(limit)
+    return list(e.to_dict() for e in query.all())
+
+
 def get_entity_by_id(entity_id):  # noqa: E501
     """Find entity by ID
 

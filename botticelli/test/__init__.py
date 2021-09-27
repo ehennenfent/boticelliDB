@@ -4,6 +4,9 @@ import connexion
 from flask_testing import TestCase
 
 from botticelli.encoder import JSONEncoder
+from botticelli.database import _retarget_engine
+
+_retarget_engine("sqlite:///test.db")
 
 
 class BaseTestCase(TestCase):

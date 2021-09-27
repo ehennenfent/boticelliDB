@@ -18,9 +18,9 @@ class TestEntityController(BaseTestCase):
         Add a new entity to the database
         """
         body = {
-            "is_real": true,
+            "is_real": True,
             "alphabetized_as": "O",
-            "is_living": true,
+            "is_living": True,
             "gender": "male",
             "given_name": "Shaquille",
             "description": "American former basketball player and sports analyst on TNT",
@@ -30,7 +30,6 @@ class TestEntityController(BaseTestCase):
             "birth_year": "1972",
             "surname": "O'Neal",
             "nickname": "Shaq",
-            "id": 0,
         }
         headers = {
             "Content-Type": "application/json",
@@ -57,7 +56,7 @@ class TestEntityController(BaseTestCase):
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(
-            "/v1/entity/{entity_id}".format(entity_id=56),
+            "/v1/entity/{entity_id}".format(entity_id=1),
             method="DELETE",
             headers=headers,
         )
@@ -101,9 +100,9 @@ class TestEntityController(BaseTestCase):
         Update an existing entity
         """
         body = {
-            "is_real": true,
+            "is_real": True,
             "alphabetized_as": "O",
-            "is_living": true,
+            "is_living": True,
             "gender": "male",
             "given_name": "Shaquille",
             "description": "American former basketball player and sports analyst on TNT",
@@ -113,7 +112,6 @@ class TestEntityController(BaseTestCase):
             "birth_year": "1972",
             "surname": "O'Neal",
             "nickname": "Shaq",
-            "id": 0,
         }
         headers = {
             "Content-Type": "application/json",
@@ -126,27 +124,6 @@ class TestEntityController(BaseTestCase):
             headers=headers,
             data=json.dumps(body),
             content_type="application/json",
-        )
-        self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
-
-    @unittest.skip("application/x-www-form-urlencoded not supported by Connexion")
-    def test_update_entity_with_form(self):
-        """Test case for update_entity_with_form
-
-        Updates a entity in the database with form data
-        """
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "api_key": "special-key",
-            "Authorization": "Bearer special-key",
-        }
-        data = dict(name="name_example", status="status_example")
-        response = self.client.open(
-            "/v1/entity/{entity_id}".format(entity_id=56),
-            method="POST",
-            headers=headers,
-            data=data,
-            content_type="application/x-www-form-urlencoded",
         )
         self.assert200(response, "Response body is : " + response.data.decode("utf-8"))
 

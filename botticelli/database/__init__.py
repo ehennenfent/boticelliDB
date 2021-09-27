@@ -1,14 +1,27 @@
 from pathlib import Path
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker, scoped_session
 
 # from open_alchemy import init_yaml
 
-URL = "sqlite:///test.db"
+URL = "sqlite:///botticelli.db"
 
-engine = create_engine(URL, echo=True, future=True)
+engine = create_engine(
+    URL, echo=True, future=True, connect_args={"check_same_thread": False}
+)
 Base = declarative_base()
-Session = sessionmaker(bind=engine)
+Session = scoped_session(sessionmaker(bind=engine))
+
+
+def _retarget_engine(new_url):
+    global engine
+    global Session
+    engine = create_engine(
+        new_url, echo=True, future=True, connect_args={"check_same_thread": False}
+    )
+    Session = scoped_session(sessionmaker(bind=engine))
+    Base.metadata.create_all(engine)
+
 
 # _parent_dir = Path(__file__).parent.parent
 # _spec_file = _parent_dir.joinpath("openapi", "openapi.yaml")

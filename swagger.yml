@@ -110,6 +110,38 @@ paths:
       - entity
       x-codegen-request-body-name: body
       x-openapi-router-controller: botticelli.controllers.entity_controller
+  /entity/search:
+    get:
+      operationId: search_for_entities
+      parameters:
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: The number of items to skip before starting to collect the result set
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: The numbers of items to return
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: Search term to look for
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Entity'
+                type: array
+          description: A list of entities.
+      summary: Returns entities whose name matches the search term
+      tags:
+      - entity
+      x-openapi-router-controller: botticelli.controllers.entity_controller
   /entity/{entity_id}:
     delete:
       operationId: delete_entity

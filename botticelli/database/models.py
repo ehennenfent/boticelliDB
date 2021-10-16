@@ -84,6 +84,8 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     gender = Column(Enum(Gender))
     score = Column(Integer, default=0)
     description = Column(String)
+    wikipedia_url = Column(String)
+    image_url = Column(String)
     tags = relationship(Tag, secondary=tag_table, back_populates="tagged")
     facts = relationship(Fact, back_populates="entity")
 

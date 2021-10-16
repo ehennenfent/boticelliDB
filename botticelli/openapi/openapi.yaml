@@ -860,6 +860,14 @@ components:
           example: American former basketball player and sports analyst on TNT
           title: description
           type: string
+        wikipedia_url:
+          example: https://en.wikipedia.org/wiki/Shaquille_O%27Neal
+          title: URL of wikipedia page
+          type: string
+        image_url:
+          example: https://en.wikipedia.org/wiki/File:Shaquille_O%27Neal_October_2017_(cropped).jpg
+          title: URL for image of entity
+          type: string
         tags:
           items:
             allOf:

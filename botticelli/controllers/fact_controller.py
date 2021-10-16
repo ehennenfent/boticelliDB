@@ -90,10 +90,6 @@ def update_fact(fact_id, entity_id):  # noqa: E501
     :type fact_id: int
     :param entity_id: ID of entity this fact belongs to
     :type entity_id: int
-    :param name: Updated name of the fact
-    :type name: str
-    :param status: Updated status of the fact
-    :type status: str
 
     :rtype: None
     """

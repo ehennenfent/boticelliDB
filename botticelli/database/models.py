@@ -81,6 +81,7 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     is_real = Column(Boolean)
     is_living = Column(Boolean)
     birth_year = Column(String)
+    death_year = Column(String)
     gender = Column(Enum(Gender))
     score = Column(Integer, default=0)
     description = Column(String)

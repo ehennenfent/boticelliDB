@@ -1,15 +1,118 @@
 from . import Session, User, Tag
 
 DEFAULT_TAGS = {
+    # Qualifiers for non-real entities
+    "Human",
+    "Alien",
+    "Deity",
+    "Cryptid",
+
+    # Profession
     "Actor/Actress",
-    "Animal",
+    "Artist",
     "Athlete",
     "Author",
-    "Deity",
     "Musician",
     "Politician",
     "Religious Figure",
     "Scientist",
+    "Business Person",
+    "Inventor",
+    "Physician",
+    "Newscaster",
+    "Chef",
+    "Military Figure",
+    "Social Media Personality",
+
+    # Continent of Origin
+    "North American",
+    "South American",
+    "African",
+    "European",
+    "Asian",
+    "Australian",
+    "Antarctic",  # you never know
+
+    # Modern Country of Origin
+    "American",
+    "Canadian",
+    "Mexican",
+    "Chinese",
+    "Japanese",
+    "Indian",
+    "Korean",
+    "Filipino",
+    "Indonesian",
+    "Pakistani",
+    "Russian",
+    "French",
+    "Spanish",
+    "Portugese",
+    "Italian",
+    "English",
+    "Irish",
+    "Scottish",
+    "German",
+    "Brazilian",
+    "South African",
+
+    # Ancient Civilizations
+    "Egyptian",
+    "Greek",
+    "Roman",
+    "Persian",
+    "Babylonian",
+    "Byzantine",
+    "Mayan",
+    "Aztec",
+
+    # Race
+    "European Descent",
+    "African Descent",
+    "East Asian Descent",
+    "South Asian Descent",
+    "Middle-Eastern Descent",
+    "Indigenous American",
+    "Indigenous Australian",
+    "Pacific Islander",
+
+    # Gender & Sexuality
+    "Heterosexual",
+    "Homosexual",
+    "Bisexual",
+    "Transgender",
+
+    # Awards
+    "Nobel Prize",
+    "Turing Award",
+    "Fields Medal",
+    "Medal of Honor",
+    "Medal of Freedom",
+
+    # Types of Animals
+    "Dog",
+    "Cat",
+    "Horse",
+    "Rabbit",
+
+    # Religions
+    "Christian",
+    "Jewish",
+    "Muslim",
+    "Hindu",
+    "Buddhist",
+
+    # Popular works of fiction
+    "Lord of the Rings",
+    "The Chronicles of Narnia",
+    "Harry Potter",
+    "Game of Thrones",
+    "The Witcher",
+    "Star Wars",
+    "Star Trek",
+    "The Expanse",
+    "Marvel Cinematic Universe",
+
 }
 
 DEFAULT_USERS = (

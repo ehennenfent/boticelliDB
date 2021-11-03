@@ -797,59 +797,57 @@ components:
         tags: []
         score: 6
         birth_year: "1972"
+        death_year: ""
         surname: O'Neal
         nickname: Shaq
+        wikipedia_url: https://en.wikipedia.org/wiki/Shaquille_O%27Neal
+        image_url: https://en.wikipedia.org/wiki/File:Shaquille_O%27Neal_October_2017_(cropped).jpg
       properties:
         id:
           format: int64
-          readOnly: true
           title: id
           type: integer
+          readOnly: true
           x-primary-key: true
           x-nullable: false
           x-autoincrement: true
         updated_at:
-          format: date-time
           readOnly: true
           type: string
+          format: date-time
         created_at:
-          format: date-time
           readOnly: true
           type: string
+          format: date-time
         given_name:
-          example: Shaquille
           title: given_name
           type: string
         nickname:
-          example: Shaq
           title: nickname
           type: string
         surname:
-          example: O'Neal
           title: surname
           type: string
         alphabetized_as:
-          example: O
           title: alphabetized_as
           type: string
         is_real:
-          example: true
           title: is_real
           type: boolean
         is_living:
-          example: true
           title: is_living
           type: boolean
         birth_year:
-          example: "1972"
           title: birth_year
+          type: string
+        death_year:
+          title: death_year
           type: string
         gender:
           enum:
           - male
           - female
           - analog
-          example: male
           title: gender
           type: string
         score:
@@ -857,15 +855,12 @@ components:
           title: score
           type: integer
         description:
-          example: American former basketball player and sports analyst on TNT
           title: description
           type: string
         wikipedia_url:
-          example: https://en.wikipedia.org/wiki/Shaquille_O%27Neal
           title: URL of wikipedia page
           type: string
         image_url:
-          example: https://en.wikipedia.org/wiki/File:Shaquille_O%27Neal_October_2017_(cropped).jpg
           title: URL for image of entity
           type: string
         tags:

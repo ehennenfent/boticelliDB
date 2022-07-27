@@ -318,6 +318,7 @@ class EntityDict(typing.TypedDict, total=False):
     """TypedDict for properties that are not required."""
 
     id: int
+    wikidata_id: typing.Optional[str]
     given_name: typing.Optional[str]
     nickname: typing.Optional[str]
     surname: typing.Optional[str]
@@ -337,6 +338,7 @@ class TEntity(typing.Protocol):
 
     Attrs:
         id: The id of the Entity.
+        wikidata_id: The wikidata_id of the Entity.
         given_name: The given_name of the Entity.
         nickname: The nickname of the Entity.
         surname: The surname of the Entity.
@@ -359,6 +361,7 @@ class TEntity(typing.Protocol):
 
     # Model properties
     id: "sqlalchemy.Column[int]"
+    wikidata_id: "sqlalchemy.Column[typing.Optional[str]]"
     given_name: "sqlalchemy.Column[typing.Optional[str]]"
     nickname: "sqlalchemy.Column[typing.Optional[str]]"
     surname: "sqlalchemy.Column[typing.Optional[str]]"
@@ -375,6 +378,7 @@ class TEntity(typing.Protocol):
     def __init__(
         self,
         id: typing.Optional[int] = None,
+        wikidata_id: typing.Optional[str] = None,
         given_name: typing.Optional[str] = None,
         nickname: typing.Optional[str] = None,
         surname: typing.Optional[str] = None,
@@ -393,6 +397,7 @@ class TEntity(typing.Protocol):
 
         Args:
             id: The id of the Entity.
+            wikidata_id: The wikidata_id of the Entity
             given_name: The given_name of the Entity.
             nickname: The nickname of the Entity.
             surname: The surname of the Entity.
@@ -413,6 +418,7 @@ class TEntity(typing.Protocol):
     def from_dict(
         cls,
         id: typing.Optional[int] = None,
+        wikidata_id: typing.Optional[str] = None,
         given_name: typing.Optional[str] = None,
         nickname: typing.Optional[str] = None,
         surname: typing.Optional[str] = None,
@@ -430,6 +436,7 @@ class TEntity(typing.Protocol):
 
         Args:
             id: The id of the Entity.
+            wikidata_id: The wikidata_id of the Entity
             given_name: The given_name of the Entity.
             nickname: The nickname of the Entity.
             surname: The surname of the Entity.

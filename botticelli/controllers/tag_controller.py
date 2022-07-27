@@ -34,8 +34,8 @@ def delete_tag(tag_id):  # noqa: E501
 
     :param tag_id: Tag id to delete
     :type tag_id: int
-    :param api_key:
-    :type api_key: str
+    :param apiKey:
+    :type apiKey: str
 
     :rtype: None
     """
@@ -103,8 +103,8 @@ def untag_entity(entity_id, tag_id):  # noqa: E501
     :type entity_id: int
     :param tag_id: ID of tag to remove from this entity
     :type tag_id: int
-    :param api_key:
-    :type api_key: str
+    :param apiKey:
+    :type apiKey: str
 
     :rtype: None
     """

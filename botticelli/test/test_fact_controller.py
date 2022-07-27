@@ -20,7 +20,7 @@ class TestFactController(BaseTestCase):
         body = {"id": 1, "text": "text", "entity_id": 5}
         headers = {
             "Content-Type": "application/json",
-            "api_key": "special-key",
+            "apiKey": "special-key",
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(
@@ -38,8 +38,8 @@ class TestFactController(BaseTestCase):
         Deletes a fact
         """
         headers = {
-            "api_key": "api_key_example",
-            "api_key": "special-key",
+            "apiKey": "apiKey_example",
+            "apiKey": "special-key",
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(
@@ -87,7 +87,7 @@ class TestFactController(BaseTestCase):
         body = {"id": 1, "text": "text", "entity_id": 5}
         headers = {
             "Content-Type": "application/json",
-            "api_key": "special-key",
+            "apiKey": "special-key",
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(

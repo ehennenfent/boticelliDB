@@ -87,7 +87,7 @@ paths:
           content: {}
           description: Invalid input
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Add a new entity to the database
@@ -148,7 +148,7 @@ paths:
           content: {}
           description: Entity not found
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Deletes a entity
@@ -215,7 +215,7 @@ paths:
           content: {}
           description: Validation exception
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Update this entity
@@ -273,7 +273,7 @@ paths:
           content: {}
           description: Invalid input
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Add a new fact to the database
@@ -311,7 +311,7 @@ paths:
           content: {}
           description: Fact not found
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Deletes a fact
@@ -396,7 +396,7 @@ paths:
           content: {}
           description: Validation exception
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Updates a fact in the database with form data
@@ -433,7 +433,7 @@ paths:
           content: {}
           description: Tag or Entity not found
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Remove a tag from an entity
@@ -466,7 +466,7 @@ paths:
           content: {}
           description: Invalid input
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Assign a tag to an entity
@@ -504,7 +504,7 @@ paths:
           content: {}
           description: Invalid input
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Add a new tag to the database
@@ -533,7 +533,7 @@ paths:
           content: {}
           description: Tag not found
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Deletes a tag
@@ -567,7 +567,7 @@ paths:
           content: {}
           description: Tag not found
       security:
-      - api_key: []
+      - apiKey: []
       summary: Find tag by ID
       tags:
       - tag
@@ -602,7 +602,7 @@ paths:
           content: {}
           description: Validation exception
       security:
-      - api_key: []
+      - apiKey: []
       - boticelli_auth:
         - write:entries
       summary: Updates a tag in the database with form data
@@ -657,7 +657,7 @@ paths:
           description: successful operation
       summary: Logs out current logged in user session
       security:
-      - api_key: []
+      - apiKey: []
       tags:
       - user
       x-openapi-router-controller: botticelli.controllers.user_controller
@@ -791,6 +791,7 @@ components:
         alphabetized_as: O
         is_living: true
         gender: male
+        wikidata_id: Q169452
         given_name: Shaquille
         description: American former basketball player and sports analyst on TNT
         facts: []
@@ -819,6 +820,9 @@ components:
           readOnly: true
           type: string
           format: date-time
+        wikidata_id:
+          title: wikidata_id
+          type: string
         given_name:
           title: given_name
           type: string
@@ -892,8 +896,8 @@ components:
       type: oauth2
       x-tokenInfoFunc: botticelli.controllers.security_controller_.info_from_boticelli_auth
       x-scopeValidateFunc: botticelli.controllers.security_controller_.validate_scope_boticelli_auth
-    api_key:
+    apiKey:
       in: header
-      name: api_key
+      name: apiKey
       type: apiKey
-      x-apikeyInfoFunc: botticelli.controllers.security_controller_.info_from_api_key
+      x-apikeyInfoFunc: botticelli.controllers.security_controller_.info_from_apiKey

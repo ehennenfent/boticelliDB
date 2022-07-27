@@ -20,7 +20,7 @@ class TestTagController(BaseTestCase):
         body = {"name": "name", "id": 0}
         headers = {
             "Content-Type": "application/json",
-            "api_key": "special-key",
+            "apiKey": "special-key",
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(
@@ -38,8 +38,8 @@ class TestTagController(BaseTestCase):
         Deletes a tag
         """
         headers = {
-            "api_key": "api_key_example",
-            "api_key": "special-key",
+            "apiKey": "apiKey_example",
+            "apiKey": "special-key",
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(
@@ -65,7 +65,7 @@ class TestTagController(BaseTestCase):
         """
         headers = {
             "Accept": "application/json",
-            "api_key": "special-key",
+            "apiKey": "special-key",
         }
         response = self.client.open(
             "/v1/tag/{tag_id}".format(tag_id=56), method="GET", headers=headers
@@ -80,7 +80,7 @@ class TestTagController(BaseTestCase):
         body = {"name": "name", "id": 0}
         headers = {
             "Content-Type": "application/json",
-            "api_key": "special-key",
+            "apiKey": "special-key",
             "Authorization": "Bearer special-key",
         }
         response = self.client.open(

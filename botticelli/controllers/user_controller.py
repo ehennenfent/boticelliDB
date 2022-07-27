@@ -61,4 +61,4 @@ def logout_user():  # noqa: E501
     :rtype: None
     """
     print("Logging out", connexion.context["token_info"]["associated_username"])
-    del active_sessions[connexion.request.headers["api_key"]]
+    del active_sessions[connexion.request.headers["apiKey"]]

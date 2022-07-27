@@ -95,7 +95,7 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     def alphabetized_as(self):
         for maybe in ("_alphabetized_as", "nickname", "surname", "given_name"):
             maybe = getattr(self, maybe)
-            if maybe is not None:
+            if maybe:
                 return maybe[0]
 
     @alphabetized_as.setter

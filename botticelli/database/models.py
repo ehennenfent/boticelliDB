@@ -74,6 +74,7 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
     remappings = {"alphabetized_as": "_alphabetized_as"}
 
     id = Column(Integer, primary_key=True)
+    wikidata_id = Column(String)
     given_name = Column(String)
     nickname = Column(String)
     surname = Column(String)

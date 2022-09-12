@@ -779,6 +779,7 @@ components:
         is_living: true
         gender: male
         wikidata_id: Q169452
+        display_as: Shaquille O'Neal
         given_name: Shaquille
         description: American former basketball player and sports analyst on TNT
         facts: []
@@ -809,6 +810,9 @@ components:
           format: date-time
         wikidata_id:
           title: wikidata_id
+          type: string
+        display_as:
+          title: display_as
           type: string
         given_name:
           title: given_name

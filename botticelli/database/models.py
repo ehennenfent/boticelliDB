@@ -75,6 +75,7 @@ class Entity(JSONSerializableMixin, TimestampsMixin, Base):
 
     id = Column(Integer, primary_key=True)
     wikidata_id = Column(String)
+    display_as = Column(String)
     given_name = Column(String)
     nickname = Column(String)
     surname = Column(String)

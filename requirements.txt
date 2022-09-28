@@ -14,3 +14,4 @@ sqlalchemy-mixins==1.5.3
 bcrypt==4.0.0
 Flask-Cors==3.0.10
 greenlet==1.1.2
+psycopg2==2.9.3

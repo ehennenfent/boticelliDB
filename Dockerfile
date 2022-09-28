@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/
 
+RUN apt install -y libpq-dev
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app

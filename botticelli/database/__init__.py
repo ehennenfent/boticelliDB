@@ -9,7 +9,7 @@ URL = os.environ.get('DATABASE_URL', "sqlite:///botticelli.db")
 
 print("Creating database using", URL.split(":")[0])
 engine = create_engine(
-    URL, echo=True, future=True, connect_args={"check_same_thread": False}
+    URL, echo=True, future=True,  # connect_args={"check_same_thread": False}
 )
 Base = declarative_base()
 Session = scoped_session(sessionmaker(bind=engine))

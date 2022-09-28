@@ -1,11 +1,13 @@
 from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, scoped_session
+import os
 
 # from open_alchemy import init_yaml
 
-URL = "sqlite:///botticelli.db"
+URL = os.environ.get('DATABASE_URL', "sqlite:///botticelli.db")
 
+print("Creating database using", URL.split(":")[0])
 engine = create_engine(
     URL, echo=True, future=True, connect_args={"check_same_thread": False}
 )
